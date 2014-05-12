@@ -29,8 +29,9 @@ class AppConfig < ActiveRecord::Base
     config = find_or_create_by(name: name.to_s)
     config.value = value.to_s
     config.value_type = detect_type(value)
-    Rails.cache.write "config.#{name}", value
-    config.save
+    if config.save
+      Rails.cache.write "config.#{name}", value
+    end
   end
 
   def self.detect_type(value)
